@@ -41,9 +41,11 @@ vim wpa_supplicant.conf
 ```
 - Paste in the following details replacing with your credentials (remember to keep those quotation marks when you put your network ssid and password in this config)
 ```
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
 network={
-    ssid="YOUR_SSID"
-    psk="YOUR_WIFI_PASSWORD"
+    ssid="<NETWORK_NAME>"
+    psk="<PASSWORD>"
     key_mgmt=WPA-PSK
 }
 ```
