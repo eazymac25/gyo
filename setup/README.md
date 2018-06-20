@@ -2,6 +2,7 @@
 
 ### Key Links
 - Raspberry Pi Install to SD Card: https://www.raspberrypi.org/documentation/installation/installing-images/mac.md
+- Wifi Connection: https://styxit.com/2017/03/14/headless-raspberry-setup.html
 
 ### Mac OS Install:
 ---
@@ -21,3 +22,7 @@ diskutil list
 ```bash
 diskutil unmountDisk /dev/disk<disk# from diskutil>
 ```
+- Blah Blah Blah will continue this later
+
+2. Set up Wifi on the Raspberry Pi so you can SSH
+
