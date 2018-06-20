@@ -1,10 +1,10 @@
 # Set Up Info
 ---
 
-### Mac OS Install:
-
-#### Key Links
+### Key Links
 - Raspberry Pi Install to SD Card: https://www.raspberrypi.org/documentation/installation/installing-images/mac.md
+
+### Mac OS Install:
 
 1. Install the Operating System on an SD Card
 
