@@ -49,4 +49,14 @@ network={
     key_mgmt=WPA-PSK
 }
 ```
+- Remove the SD, put into raspberry pi, turn it on
+- Test that you can connect to the pi after 30 seconds
+```bash
+ping raspberrypi.local
+```
+- Connect via secure shell :)
+```bash
+ssh pi@raspberrypi.local
+```
+- enter password - should default to raspberry
 
