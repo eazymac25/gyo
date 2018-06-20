@@ -1,5 +1,5 @@
 # Set Up Info
-===
+---
 
 ### Mac OS Install:
 
