@@ -3,6 +3,7 @@
 ### Key Links
 - Raspberry Pi Install to SD Card: https://www.raspberrypi.org/documentation/installation/installing-images/mac.md
 - Wifi Connection: https://styxit.com/2017/03/14/headless-raspberry-setup.html
+- Network Commands: https://www.iplocation.net/find-private-network-ip
 
 ### Mac OS Install:
 ---
