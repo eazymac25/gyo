@@ -35,4 +35,16 @@ cd /Volumes/boot
 ```bash
 touch ssd
 ```
+- Create the wifi config file
+```bash
+vim wpa_supplicant.conf
+```
+- Paste in the following details replacing with your credentials (remember to keep those quotation marks when you put your network ssid and password in this config)
+```
+network={
+    ssid="YOUR_SSID"
+    psk="YOUR_WIFI_PASSWORD"
+    key_mgmt=WPA-PSK
+}
+```
 
