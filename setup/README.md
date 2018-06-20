@@ -26,3 +26,13 @@ diskutil unmountDisk /dev/disk<disk# from diskutil>
 
 2. Set up Wifi on the Raspberry Pi so you can SSH
 
+- Disconnect the SD card and plug back in - this will re-register the drive
+- cd to the boot folder of the SD drive (this will appear in a boot folder on the macOS)
+```bash
+cd /Volumes/boot
+```
+- add an empty ssh file
+```bash
+touch ssd
+```
+
