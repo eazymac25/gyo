@@ -9,5 +9,5 @@ def poll_sensor(pin=4):
 
 	while True:
 		current_time = datetime.now()
-		humidity, temp = dht.read_retry(sensor, pin)
+		humidity, temp = dht.read_retry(SENSOR, pin)
 		sleep(2.0)
