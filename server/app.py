@@ -12,6 +12,7 @@ def hello_world():
 @app.route('/rest/api/1/record')
 def create_record():
 	pass
+
 @app.route('/rest/api/1/records')
 def create_records():
 	pass
