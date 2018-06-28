@@ -46,18 +46,21 @@ def create_record():
             req_data.get('temperature'),
             req_data.get('ts'),
         )
+
+        result = {}
         cur.execute(insert, data)
 
         if cur.lastrowid:
-            return jsonify({"error": "", "lastrowid": cur.lastrowid})
+            result = {"error": "", "lastrowid": cur.lastrowid}
         else:
-            return jsonify({"error": "Insert Error", "lastrowid": ""})
+            result = {"error": "Insert Error", "lastrowid": ""}
 
         conn.commit()
-
         # clean up and close all
         cur.close()
         conn.close()
+
+        return jsonify(result)
 
     else:
         return jsonify({"error": "Incorrect Request Method - accept POST only", "lastrowid": ""})
