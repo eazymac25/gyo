@@ -34,6 +34,7 @@ def create_record():
         }
     """
     if request.method == 'POST':
+
         req_data = request.get_json()
         conn = mysql.connect(**sql_config)
         cur = conn.cursor()
@@ -47,10 +48,19 @@ def create_record():
         )
         cur.execute(insert, data)
 
+        if cur.lastrowid:
+            return jsonify({"error": "", "lastrowid": cur.lastrowid})
+        else:
+            return jsonify({"error": "Insert Error", "lastrowid": ""})
+
+        conn.commit()
+
+        # clean up and close all
         cur.close()
-        cnx.close()
+        conn.close()
+
     else:
-        return jsonify({"error": "Incorrect Request Method - accept POST only"})
+        return jsonify({"error": "Incorrect Request Method - accept POST only", "lastrowid": ""})
 
 @app.route('/rest/api/1/records', methods=['POST'])
 def create_records():
