@@ -39,7 +39,12 @@ def create_record():
         cur = conn.cursor()
 
         insert = "INSERT INTO sensor_data (Humidity, Temperature, ts) VALUES (%s, %s, %s)"
-        data = ""
+        # unpack the data
+        data = (
+        	req_data.get('humidity'),
+        	req_data.get('temperature'),
+        	req_data.get('ts'),
+        )
         cur.execute(insert, data)
 
         cur.close()
