@@ -70,7 +70,25 @@ def create_records():
     # TODO: implement me :)
     pass
 
-@app.route('/rest/api/1/record/<int:id>', methods=['GET'])
-def get_record():
-    pass
+@app.route('/rest/api/1/record/<int:record_id>', methods=['GET'])
+def get_record(record_id):
 
+    record = {}
+    if request.method == 'GET':
+
+        conn = mysql.connect(**sql_config)
+        cur = conn.cursor()
+
+        query = "SELECT * FROM sensor_data WHERE ID=%s"
+        cur.execute(query, (record_id))
+
+        for ID, Humidity, Temperature, ts in cur:
+            record = {
+                "id": ID,
+                "humidity": Humidity,
+                "temperature": Temperature,
+                "createTime": ts
+            }
+            return jsonify({"error": "", "record": record})
+    else:
+        return jsonify({"error": "Only accept get request", "record": record})
