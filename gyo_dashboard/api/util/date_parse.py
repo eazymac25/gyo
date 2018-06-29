@@ -19,8 +19,8 @@ class DateParse(object):
         for match_obj in re.finditer(self.token_rgx, inpt):
             kind = match_obj.lastgroup
             value = match_obj.group(kind)
-            if kind == 'MISMATCH':
-                raise ValueError('Unexpected character sequence %s, did you forget quotes around string literal?' % value)
+            if kind == 'WRONG':
+                raise ValueError('Unexpected character sequence %s' % value)
             else:
                 column = match_obj.start() - col_num
                 yield self.Token(kind, value, column)
