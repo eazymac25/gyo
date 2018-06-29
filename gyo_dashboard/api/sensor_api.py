@@ -62,7 +62,7 @@ def get_record(record_id):
     if request.method == 'GET':
 
         conn = mysql.connect(**sql_config)
-        cur = conn.cursor()
+        cur = conn.cursor(buffered=True)
 
         query = "SELECT * FROM sensor_data WHERE ID=%s" % record_id
         cur.execute(query)
@@ -103,16 +103,16 @@ def get_measurement_history():
     measure_history = {}
 
     p_map = {
-        'M': 'MINUTES',
-        'H': 'HOURS',
-        'D': 'DAYS',
-        'W': 'WEEKS',
+        'M': 'MINUTE',
+        'H': 'HOUR',
+        'D': 'DAY',
+        'W': 'WEEK',
     }
 
     if request.method == 'GET':
 
         conn = mysql.connect(**sql_config)
-        cur = conn.cursor()
+        cur = conn.cursor(buffered=True)
 
         tf = int(request.args.get('timeframe', type=int))
         period = p_map[request.args.get('period', type=str)]
@@ -124,8 +124,8 @@ def get_measurement_history():
 
         measure_history = {
             "startAt": start_at,
-            "max_results": max_results
-            "truncated": False
+            "max_results": max_results,
+            "truncated": False,
             "records": []
         }
 
@@ -134,7 +134,7 @@ def get_measurement_history():
             SELECT *
             FROM sensor_data
             WHERE ts >= NOW() - INTERVAL {0} {1}
-            ORDER BY ts ASC
+            ORDER BY ts ASC;
         """.format(tf, period)
 
         cur.execute(query)
@@ -154,14 +154,12 @@ def get_measurement_history():
                         "id": pid,
                         "humidity": humidity,
                         "temperature": temperature,
-                        "createTime": ts
+                        "createTime": created
                     })
 
         cur.close()
         conn.close()
         return jsonify({"errror": "", "measureHistory": measure_history})
-        
+
     else:
         return jsonify({"error": "Only accept get request", "measureHistory": measure_history})
-
-
