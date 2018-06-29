@@ -84,7 +84,7 @@ def get_record(record_id):
         return jsonify({"error": "Only accept get request", "record": record})
 
 @app.route('/rest/api/1/measureHistory', methods=['GET'])
-def get_measurement_history(timeframe, start_at=0, max_results=100):
+def get_measurement_history(window_size, window_frequency, start_at=0, max_results=100):
     """
     We need an object that can hold size of time period and the window size:
     So 1W would be 1 Week and 1D would be 1 Day. 30 Minutes
@@ -95,10 +95,9 @@ def get_measurement_history(timeframe, start_at=0, max_results=100):
     W - Weeks
 
     Args:
-        timeframe (str): eg 23 Minutes
+        window_size (int): eg 30
+        window_frequency (str): enum M,H,D,W
         start_at (int): id to start at
         max_results (int): total results to return
-
-    Regex for timeframe: (^[1-9]\d*)([MHDW])(.*)
     """
     pass
