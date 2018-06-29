@@ -94,7 +94,7 @@ def get_measurement_history():
     D - Day
     W - Weeks
 
-    Request Params: ?tf=30&period=M&startAt=0&maxResults=100
+    Request Params: ?timeframe=30&period=M&startAt=0&maxResults=100
         tf (int): the time frame size eg 30
         period (str): enum M,H,D,W - the timeframe peirod
         startAt (int) OPTIONAL: id to start at - defaults to 0
