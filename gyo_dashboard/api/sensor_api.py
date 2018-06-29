@@ -1,27 +1,11 @@
-"""
-Simple flask app for logging temperature data from raspberry pi
-"""
+
 import re
 
 from flask import Flask, jsonify, request
 import mysql.connector as mysql
 
-sql_config = {
-    'host': 'eazymac25.mysql.pythonanywhere-services.com',
-    # 'port': 3306, # should not needs this
-    'database': 'eazymac25$gyo_logs',
-    'user': 'eazymac25',
-    'password': 'pypass2544',
-    'charset': 'utf8',
-    'use_unicode': True,
-    'get_warnings': True,
-}
-
-app = Flask(__name__)
-
-@app.route('/')
-def hello_world():
-    return 'Hello from Flask!'
+from gyo_dash.app import app
+from gyo_dash.config import sql_config
 
 @app.route('/rest/api/1/record', methods=['POST'])
 def create_record():
