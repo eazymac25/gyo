@@ -100,7 +100,68 @@ def get_measurement_history():
         startAt (int) OPTIONAL: id to start at - defaults to 0
         maxResults (int) OPTIONAL: total results to return - default to 100
     """
-    tf = int(request.args.get('timeframe', type=int))
-    period = request.args.get('period', type=str)
-    start_at = int(request.args.get('startAt', default=0, type=int))
-    max_results = int(request.args.get('maxResults', default=100, type=int))
+    measure_history = {}
+
+    p_map = {
+        'M': 'MINUTES',
+        'H': 'HOURS',
+        'D': 'DAYS',
+        'W': 'WEEKS',
+    }
+
+    if request.method == 'GET':
+
+        conn = mysql.connect(**sql_config)
+        cur = conn.cursor()
+
+        tf = int(request.args.get('timeframe', type=int))
+        period = p_map[request.args.get('period', type=str)]
+        start_at = int(request.args.get('startAt', default=0, type=int))
+        max_results = int(request.args.get('maxResults', default=100, type=int))
+
+        if start_at < 0 or max_results < 0:
+            raise ValueError('startAt and maxResults must be greater than 0')
+
+        measure_history = {
+            "startAt": start_at,
+            "max_results": max_results
+            "truncated": False
+            "records": []
+        }
+
+        # user LIMIT 1, 10 as a way to get between a row range
+        query = """
+            SELECT *
+            FROM sensor_data
+            WHERE ts >= NOW() - INTERVAL {0} {1}
+            ORDER BY ts ASC
+        """.format(tf, period)
+
+        cur.execute(query)
+        i = 0
+        for pid, humidity, temperature, created in cur:
+
+            if i > start_at + max_results:
+                measure_history['truncated'] = True
+                break
+            elif i < start_at:
+                i+=1
+                continue
+            elif i >= start_at:
+                i += 1
+                measure_history['records'].append(
+                    {
+                        "id": pid,
+                        "humidity": humidity,
+                        "temperature": temperature,
+                        "createTime": ts
+                    })
+
+        cur.close()
+        conn.close()
+        return jsonify({"errror": "", "measureHistory": measure_history})
+        
+    else:
+        return jsonify({"error": "Only accept get request", "measureHistory": measure_history})
+
+
