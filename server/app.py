@@ -99,7 +99,7 @@ def get_record(record_id):
     else:
         return jsonify({"error": "Only accept get request", "record": record})
 
-@app.route('/rest/api/1/measureHistory', methods=['GET']):
+@app.route('/rest/api/1/measureHistory', methods=['GET'])
 def get_measurement_history(timeframe, start_at=0, max_results=100):
     """
     We need an object that can hold size of time period and the window size:
