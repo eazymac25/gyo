@@ -1,6 +1,7 @@
 """
 Simple flask app for logging temperature data from raspberry pi
 """
+import re
 
 from flask import Flask, jsonify, request
 import mysql.connector as mysql
@@ -79,8 +80,8 @@ def get_record(record_id):
         conn = mysql.connect(**sql_config)
         cur = conn.cursor()
 
-        query = "SELECT * FROM sensor_data WHERE ID=%s"
-        cur.execute(query, (record_id))
+        query = "SELECT * FROM sensor_data WHERE ID=%s" % record_id
+        cur.execute(query)
 
         for ID, Humidity, Temperature, ts in cur:
             record = {
@@ -93,7 +94,27 @@ def get_record(record_id):
 
         cur.close()
         conn.close()
-        
+
         return jsonify({"error": "", "record": record})
     else:
         return jsonify({"error": "Only accept get request", "record": record})
+
+@app.route('/rest/api/1/measureHistory', methods=['GET']):
+def get_measurement_history(timeframe, start_at=0, max_results=100):
+    """
+    We need an object that can hold size of time period and the window size:
+    So 1W would be 1 Week and 1D would be 1 Day. 30 Minutes
+
+    M - Minutes
+    H - Hours
+    D - Day
+    W - Weeks
+
+    Args:
+        timeframe (str): eg 23 Minutes
+        start_at (int): id to start at
+        max_results (int): total results to return
+
+    Regex for timeframe: (^[1-9]\d*)([MHDW])(.*)
+    """
+    pass
