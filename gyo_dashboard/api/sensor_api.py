@@ -1,7 +1,7 @@
 
 import re
 
-from flask import Flask, jsonify, request
+from flask import jsonify, request
 import mysql.connector as mysql
 
 from gyo_dash.app import app
@@ -84,7 +84,7 @@ def get_record(record_id):
         return jsonify({"error": "Only accept get request", "record": record})
 
 @app.route('/rest/api/1/measureHistory', methods=['GET'])
-def get_measurement_history(window_size, window_frequency, start_at=0, max_results=100):
+def get_measurement_history():
     """
     We need an object that can hold size of time period and the window size:
     So 1W would be 1 Week and 1D would be 1 Day. 30 Minutes
@@ -94,10 +94,13 @@ def get_measurement_history(window_size, window_frequency, start_at=0, max_resul
     D - Day
     W - Weeks
 
-    Args:
-        window_size (int): eg 30
-        window_frequency (str): enum M,H,D,W
-        start_at (int): id to start at
-        max_results (int): total results to return
+    Request Params: ?tf=30&period=M&startAt=0&maxResults=100
+        tf (int): the time frame size eg 30
+        period (str): enum M,H,D,W - the timeframe peirod
+        startAt (int) OPTIONAL: id to start at - defaults to 0
+        maxResults (int) OPTIONAL: total results to return - default to 100
     """
-    pass
+    tf = int(request.args.get('timeframe', type=int))
+    period = request.args.get('period', type=str)
+    start_at = int(request.args.get('startAt', default=0, type=int))
+    max_results = int(request.args.get('maxResults', default=100, type=int))
