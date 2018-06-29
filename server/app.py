@@ -89,6 +89,11 @@ def get_record(record_id):
                 "temperature": Temperature,
                 "createTime": ts
             }
-            return jsonify({"error": "", "record": record})
+            break
+
+        cur.close()
+        conn.close()
+        
+        return jsonify({"error": "", "record": record})
     else:
         return jsonify({"error": "Only accept get request", "record": record})
