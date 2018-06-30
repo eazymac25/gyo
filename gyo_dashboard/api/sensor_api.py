@@ -142,13 +142,8 @@ def get_measurement_history():
         for pid, humidity, temperature, created in cur:
 
             if i > start_at + max_results:
-                i += 1
                 measure_history['truncated'] = True
-            elif i < start_at:
-                i+=1
-                continue
-            elif i >= start_at and i <= start_at + max_results:
-                i += 1
+            else: # i >= start_at and i <= start_at + max_results
                 measure_history['records'].append(
                     {
                         "id": pid,
@@ -156,6 +151,7 @@ def get_measurement_history():
                         "temperature": temperature,
                         "createTime": created
                     })
+            i += 1
 
         cur.close()
         conn.close()
