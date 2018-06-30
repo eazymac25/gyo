@@ -112,7 +112,7 @@ def get_measurement_history():
     if request.method == 'GET':
 
         conn = mysql.connect(**sql_config)
-        cur = conn.cursor(buffered=True)
+        cur = conn.cursor()
 
         tf = int(request.args.get('timeframe', type=int))
         period = p_map[request.args.get('period', type=str)]
@@ -128,26 +128,26 @@ def get_measurement_history():
             "truncated": False,
             "records": []
         }
-
-        # user LIMIT 1, 10 as a way to get between a row range
+        OFFSET = 1 # this is to offset the limit to see if any more records exist
         query = """
             SELECT *
             FROM sensor_data
             WHERE ts >= NOW() - INTERVAL {0} {1}
-            ORDER BY ts ASC;
-        """.format(tf, period)
+            ORDER BY ts ASC
+            LIMIT {2}, {3};
+        """.format(tf, period, start_at, start_at+max_results+OFFSET)
 
         cur.execute(query)
         i = 0
         for pid, humidity, temperature, created in cur:
 
             if i > start_at + max_results:
+                i += 1
                 measure_history['truncated'] = True
-                break
             elif i < start_at:
                 i+=1
                 continue
-            elif i >= start_at:
+            elif i >= start_at and i <= start_at + max_results:
                 i += 1
                 measure_history['records'].append(
                     {
