@@ -1,6 +1,4 @@
 
-import re
-
 from flask import jsonify, request
 import mysql.connector as mysql
 
@@ -135,10 +133,10 @@ def get_measurement_history():
             WHERE ts >= NOW() - INTERVAL {0} {1}
             ORDER BY ts ASC
             LIMIT {2}, {3};
-        """.format(tf, period, start_at, start_at+max_results+OFFSET)
+        """.format(tf, period, start_at, max_results+OFFSET)
 
         cur.execute(query)
-        i = 0
+        i = start_at + 1
         for pid, humidity, temperature, created in cur:
 
             if i > start_at + max_results:
