@@ -12,3 +12,6 @@ Currently Looking to expand the following features for the first pass:
 Second Pass:
 - A solenoid valve and water tank to auto water the plants
 - switch to turn the LED lamp on and off
+
+### See example here: http://eazymac25.pythonanywhere.com/
+![GYO Screenshot](images/gyo.png)
