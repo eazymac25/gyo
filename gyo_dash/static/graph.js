@@ -1,5 +1,6 @@
 (function(w, d, $){
 
+    var sensorGraph = null;
     var data = null;
     var settings = {
       "async": true,
@@ -32,38 +33,47 @@
         var temperature = data.measureHistory.records.map(obj => obj.temperature);
         var dates = data.measureHistory.records.map(obj => obj.createTime);
 
-        var ctx = $("#myChart");
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: dates,
-                datasets: [{
-                    label: 'Humidity',
-                    data: humidity,
-                    borderColor: "#3e95cd",
-                    fill: false
+        if (sensorGraph == null) {
+            var ctx = $("#myChart");
+            sensorGraph = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Humidity',
+                        data: humidity,
+                        borderColor: "#3e95cd",
+                        fill: false
+                    },
+                    {
+                        label: 'Temperature',
+                        data: temperature,
+                        borderColor: "#c45850",
+                        fill: false
+                    }]
                 },
-                {
-                    label: 'Temperature',
-                    data: temperature,
-                    borderColor: "#c45850",
-                    fill: false
-                }]
-            },
-            options: {
-                title: {
-                    text: "Humidity Over Time",
-                    display: true
-                },
-                // scales: {
-                //     yAxes: [{
-                //         ticks: {
-                //             beginAtZero: true
-                //         }
-                //     }]
-                // }
-            }
-        });
+                options: {
+                    title: {
+                        text: "Humidity Over Time",
+                        fontSize: 16,
+                        display: true
+                    },
+                    // scales: {
+                    //     yAxes: [{
+                    //         ticks: {
+                    //             beginAtZero: true
+                    //         }
+                    //     }]
+                    // }
+                }
+            });
+
+        } else {
+            sensorGraph.data.labels = dates;
+            sensorGraph.data.datasets[0].data = humidity;
+            sensorGraph.data.datasets[1].data = temperature;
+            sensorGraph.update(0);
+        }
     }
 
     function textToPeriod(text){
