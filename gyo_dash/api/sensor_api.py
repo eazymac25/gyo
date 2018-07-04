@@ -157,3 +157,38 @@ def get_measurement_history():
 
     else:
         return jsonify({"error": "Only accept get request", "measureHistory": measure_history})
+
+@app.route('/rest/api/1/moisture', methods=['POST', 'GET'])
+def moisture():
+
+    if request.method == 'POST':
+        req_data = request.get_json()
+        conn = mysql.connect(**sql_config)
+        cur = conn.cursor()
+
+        query = "INSERT INTO moisture_state (moisture, create_time) VALUES (%s, %s)"
+
+        data = (
+            req_data.get('moistureLevel'),
+            req_data.get('createTime')
+        )
+
+        result = {}
+        cur.execute(insert, data)
+
+        if cur.lastrowid:
+            result = {"error": "", "lastrowid": cur.lastrowid}
+        else:
+            result = {"error": "Insert Error", "lastrowid": ""}
+
+        conn.commit()
+        # clean up and close all
+        cur.close()
+        conn.close()
+
+        return jsonify(result)
+
+    elif request.method == 'GET':
+        return jsonify({})
+    else:
+        pass
