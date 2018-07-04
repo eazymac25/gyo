@@ -15,6 +15,8 @@ headers = {
     'cache-control': "no-cache",
 }
 
+PIN = 4
+
 def poll_sensor(pin=4):
 
     while True:
@@ -36,4 +38,19 @@ def poll_sensor(pin=4):
 
         sleep(SLEEP_TIME)
 
-poll_sensor()
+begin_poll = True
+retry_count = 10
+
+# on start up retry 10 times
+# if we can't get one success don't start polling
+for _ in range(retry_count):
+    try:
+        dht.read(SENSOR, PIN)
+        begin_poll = True
+        break
+    except:
+        begin_poll = False
+    sleep(.1)
+
+if begin_poll:
+    poll_sensor(pin=PIN)
