@@ -60,19 +60,19 @@ def get_record(record_id):
     if request.method == 'GET':
 
         conn = mysql.connect(**sql_config)
-        cur = conn.cursor(buffered=True)
+        cur = conn.cursor()
 
-        query = "SELECT * FROM sensor_data WHERE ID=%s" % record_id
+        query = "SELECT * FROM sensor_data WHERE ID=%s LIMIT 1" % record_id
         cur.execute(query)
 
-        for ID, Humidity, Temperature, ts in cur:
-            record = {
-                "id": ID,
-                "humidity": Humidity,
-                "temperature": Temperature,
-                "createTime": ts
-            }
-            break
+        row_id, humidity, temperature, created = cur.fetchone()
+
+        record = {
+            "id": row_id,
+            "humidity": humidity,
+            "temperature": temperature,
+            "createTime": created
+        }
 
         cur.close()
         conn.close()
@@ -160,6 +160,11 @@ def get_measurement_history():
 
 @app.route('/rest/api/1/moisture', methods=['POST', 'GET'])
 def moisture():
+    """
+    Moisture app endpoint 
+    This will allow a user to add a moisture state
+    or get the most recent moisture state - aka the current state
+    """
 
     if request.method == 'POST':
         req_data = request.get_json()
@@ -189,6 +194,23 @@ def moisture():
         return jsonify(result)
 
     elif request.method == 'GET':
-        return jsonify({})
+        conn = mysql.connect(**sql_config)
+        cur = conn.cursor()
+
+        query = "SELECT * FROM moisture_state ORDER BY create_time DESC LIMIT 1"
+        cur.execute(query)
+
+        row_id, moisture_level, created = cur.fetchone()
+
+        record = {
+            "id": row_id,
+            "moistureLevel": moisture_level,
+            "createTime": created
+        }
+
+        cur.close()
+        conn.close()
+
+        return jsonify({"error": "", "record": record})
     else:
-        pass
+        return jsonify({"error": "Only accept get and post requests"})
