@@ -1,39 +1,61 @@
+"""
+Simple script to run at raspberry pi start up which logs whether the moisture
+level is low or high
 
+This will drive two things:
+1) an updat to the GYO UI
+2) An email notification from the server
+"""
+
+# TODO: Add error handling for if this script is run
+# without the sensor connected to the specified pin/channel
+
+from datetime import datetime
 from time import sleep
+import json
 
 import RPi.GPIO as GPIO
-import smtplib
+import requests
 
+url = 'http://eazymac25.pythonanywhere.com/rest/api/1/moisture'
+headers = {
+    'content-type': "application/json",
+    'cache-control': "no-cache",
+}
 
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "yourusername@gmail.com"
-EMAIL_HOST_PASSWORD = 'yourpassword'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+CHANNEL = 17
 
+def post_moisture(moisture_level):
 
-GPIO.setmode(GPIO.BCM)
-channel = 17
-GPIO.setup(channel, GPIO.IN)
+    current_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
 
+    data = {
+        "moistureLevel": moisture_level,
+        "createTime": createTime
+    }
 
-GPIO.add_event_detect(channel, GPIO.BOTH, bouncetime=300)
-GPIO.add_event_callback(channel, moisture_callback)
-
-def update_database:
-    pass
-
-def send_email:
-    pass
+    response = requests.post(
+        url=url,
+        data=json.dumps(data),
+        headers=headers
+    )
+    return response
 
 def moisture_callback(channel):
     if GPIO.input(channel):
         # when the moisture is low
-        pass
+        post_moisture('LOW')
     else:
         # when the moisture is high
-        pass
+        post_moisture('HIGH')
     pass
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(CHANNEL, GPIO.IN)
+
+
+GPIO.add_event_detect(CHANNEL, GPIO.BOTH, bouncetime=300)
+GPIO.add_event_callback(CHANNEL, moisture_callback)
 
 while True:
     sleep(10*60) # only need to wake up every 10 minutes
