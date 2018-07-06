@@ -23,7 +23,7 @@ headers = {
     'cache-control': "no-cache",
 }
 
-CHANNEL = 17
+CHANNEL = 26
 
 def post_moisture(moisture_level):
 
@@ -43,11 +43,11 @@ def post_moisture(moisture_level):
 
 def moisture_callback(channel):
     if GPIO.input(channel):
-        # when the moisture is low
-        post_moisture('LOW')
-    else:
         # when the moisture is high
         post_moisture('HIGH')
+    else:
+        # when the moisture is low
+        post_moisture('LOW')
     pass
 
 GPIO.setmode(GPIO.BCM)
@@ -58,4 +58,4 @@ GPIO.add_event_detect(CHANNEL, GPIO.BOTH, bouncetime=300)
 GPIO.add_event_callback(CHANNEL, moisture_callback)
 
 while True:
-    sleep(10*60) # only need to wake up every 10 minutes
+    sleep(1) # we want to keep this running to register callbacks
