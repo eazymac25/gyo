@@ -2,7 +2,7 @@
 from flask import jsonify, request
 import mysql.connector as mysql
 
-from gyo_dash.app import app
+from gyo_dash import app
 from gyo_dash.config import sql_config
 
 @app.route('/rest/api/1/record', methods=['POST'])
@@ -179,7 +179,7 @@ def moisture():
         )
 
         result = {}
-        cur.execute(insert, data)
+        cur.execute(query, data)
 
         if cur.lastrowid:
             result = {"error": "", "lastrowid": cur.lastrowid}
