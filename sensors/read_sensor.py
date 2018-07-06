@@ -1,3 +1,7 @@
+"""
+read moisture
+"""
+
 from datetime import datetime
 from time import sleep
 
@@ -39,18 +43,18 @@ def poll_sensor(pin=4):
         sleep(SLEEP_TIME)
 
 begin_poll = True
-retry_count = 10
+# retry_count = 10
 
-# on start up retry 10 times
-# if we can't get one success don't start polling
-for _ in range(retry_count):
-    try:
-        dht.read(SENSOR, PIN)
-        begin_poll = True
-        break
-    except:
-        begin_poll = False
-    sleep(.1)
+# # on start up retry 10 times
+# # if we can't get one success don't start polling
+# for _ in range(retry_count):
+#     try:
+#         dht.read(SENSOR, PIN)
+#         begin_poll = True
+#         break
+#     except:
+#         begin_poll = False
+#     sleep(.1)
 
 # we want to be connected to the internet
 status = requests.head(url='http://eazymac25.pythonanywhere.com/').status_code
