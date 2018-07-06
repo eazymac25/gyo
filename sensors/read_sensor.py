@@ -52,5 +52,12 @@ for _ in range(retry_count):
         begin_poll = False
     sleep(.1)
 
-if begin_poll:
+# we want to be connected to the internet
+status = requests.head(url='http://eazymac25.pythonanywhere.com/').status_code
+
+while status != 200:
+    status = requests.head(url='http://eazymac25.pythonanywhere.com/').status_code
+    sleep(2)
+
+if begin_poll and status==200:
     poll_sensor(pin=PIN)
