@@ -13,9 +13,13 @@ This will drive two things:
 from datetime import datetime
 from time import sleep
 import json
+import logging
 
 import RPi.GPIO as GPIO
 import requests
+
+logging.basicConfig(filename=r'/home/pi/moisture.logs',level=logging.DEBUG)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 url = 'http://eazymac25.pythonanywhere.com/rest/api/1/moisture'
 headers = {
@@ -26,19 +30,28 @@ headers = {
 CHANNEL = 26
 
 def post_moisture(moisture_level):
+    response = None
 
-    current_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
+    try:
+        old_level = requests.get(url=url).json().get('record', {}).get('moistureLevel', None)
+    except Exception as e:
+        logging.debug('error checking last level %s', e)
 
-    data = {
-        "moistureLevel": moisture_level,
-        "createTime": current_time
-    }
+    if moisture_level != old_level and old_level is not None:
+        current_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
 
-    response = requests.post(
-        url=url,
-        data=json.dumps(data),
-        headers=headers
-    )
+        data = {
+            "moistureLevel": moisture_level,
+            "createTime": current_time
+        }
+        try:
+            response = requests.post(
+                url=url,
+                data=json.dumps(data),
+                headers=headers
+            )
+        except Exception as e:
+            logging.debug('error posting data: %s', e)
     return response
 
 def moisture_callback(channel):
@@ -54,7 +67,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(CHANNEL, GPIO.IN)
 
 
-GPIO.add_event_detect(CHANNEL, GPIO.BOTH, bouncetime=300)
+GPIO.add_event_detect(CHANNEL, GPIO.BOTH, bouncetime=1000)
 GPIO.add_event_callback(CHANNEL, moisture_callback)
 
 while True:
