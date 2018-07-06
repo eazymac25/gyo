@@ -144,9 +144,9 @@
 
             getMeasurements(timeframe, period);
         });
-    });
 
-    // load default
-    getMeasurements("30", "M");
+        // load default
+        getMeasurements("30", "M");
+    });
 
 })(window, document, $);
