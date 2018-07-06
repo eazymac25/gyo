@@ -31,7 +31,7 @@ def post_moisture(moisture_level):
 
     data = {
         "moistureLevel": moisture_level,
-        "createTime": createTime
+        "createTime": current_time
     }
 
     response = requests.post(
