@@ -38,12 +38,14 @@ def poll_sensor(pin=4):
             "temperature": temp,
             "ts": current_time
         }
-
-        response = requests.post(
-            url=url,
-            data=json.dumps(data),
-            headers=headers
-        )
+        try:
+            response = requests.post(
+                url=url,
+                data=json.dumps(data),
+                headers=headers
+            )
+        except Exception as e:
+            logging.error('error posting: %s', e)
 
         sleep(SLEEP_TIME)
 
@@ -62,12 +64,17 @@ begin_poll = True
 #     sleep(.1)
 
 # we want to be connected to the internet
-status = requests.head(url='http://eazymac25.pythonanywhere.com/').status_code
+
+status = 500
 
 logging.info('STATUS %s', status)
 
 while status != 200:
-    status = requests.head(url='http://eazymac25.pythonanywhere.com/').status_code
+    try:
+        status = requests.head(url='http://eazymac25.pythonanywhere.com/').status_code
+    except Exception as e:
+        logging.info('error: %s', e)
+
     logging.info('STATUS %s', status)
     sleep(2)
 
