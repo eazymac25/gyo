@@ -11,6 +11,7 @@ import json
 import Adafruit_DHT as dht # easy package to deal with reading GPIO
 
 logging.basicConfig(filename=r'/home/pi/sensor.logs',level=logging.DEBUG)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 SENSOR = dht.DHT11
 SLEEP_TIME = 2*60 # let's post the temperature and humidity every 2 minutes
