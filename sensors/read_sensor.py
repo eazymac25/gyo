@@ -29,9 +29,7 @@ def poll_sensor(pin=4):
     while True:
 
         current_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
-        logging.info('TIME %s', current_time)
         humidity, temp = dht.read_retry(SENSOR, pin)
-        logging.info('H: %s, T: %s', humidity, temp)
 
         data = {
             "humidity": humidity,
@@ -45,23 +43,25 @@ def poll_sensor(pin=4):
                 headers=headers
             )
         except Exception as e:
-            logging.error('error posting: %s', e)
+            logging.debug('Error posting to API: %s', e)
 
         sleep(SLEEP_TIME)
 
 begin_poll = True
-# retry_count = 10
+retry_count = 10
 
-# # on start up retry 10 times
-# # if we can't get one success don't start polling
-# for _ in range(retry_count):
-#     try:
-#         dht.read(SENSOR, PIN)
-#         begin_poll = True
-#         break
-#     except:
-#         begin_poll = False
-#     sleep(.1)
+# on start up retry 10 times
+# if we can't get one success don't start polling
+for _ in range(retry_count):
+    try:
+        dht.read(SENSOR, PIN)
+        begin_poll = True
+        logging.info('begin polling set to true')
+        break
+    except Exception as e:
+        logging.debug('Error polling %s', e)
+        begin_poll = False
+    sleep(.1)
 
 # we want to be connected to the internet
 
@@ -70,10 +70,11 @@ status = 500
 logging.info('STATUS %s', status)
 
 while status != 200:
+
     try:
         status = requests.head(url='http://eazymac25.pythonanywhere.com/').status_code
     except Exception as e:
-        logging.info('error: %s', e)
+        logging.error('error: %s', e)
 
     logging.info('STATUS %s', status)
     sleep(2)
