@@ -4,10 +4,13 @@ read moisture
 
 from datetime import datetime
 from time import sleep
+import logging
 
 import requests
 import json
 import Adafruit_DHT as dht # easy package to deal with reading GPIO
+
+logging.basicConfig(filename=r'/home/pi/sensor.logs',level=logging.DEBUG)
 
 SENSOR = dht.DHT11
 SLEEP_TIME = 2*60 # let's post the temperature and humidity every 2 minutes
@@ -26,7 +29,9 @@ def poll_sensor(pin=4):
     while True:
 
         current_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
+        logging.info('TIME %s', current_time)
         humidity, temp = dht.read_retry(SENSOR, pin)
+        logging.info('H: %s, T: %s', humidity, temp)
 
         data = {
             "humidity": humidity,
@@ -59,9 +64,13 @@ begin_poll = True
 # we want to be connected to the internet
 status = requests.head(url='http://eazymac25.pythonanywhere.com/').status_code
 
+logging.info('STATUS %s', status)
+
 while status != 200:
     status = requests.head(url='http://eazymac25.pythonanywhere.com/').status_code
+    logging.info('STATUS %s', status)
     sleep(2)
 
 if begin_poll and status==200:
+    logging.info('BEGIN POLLING')
     poll_sensor(pin=PIN)
