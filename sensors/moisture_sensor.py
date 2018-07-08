@@ -29,21 +29,37 @@ headers = {
 
 CHANNEL = 26
 
+status = 500
+
+logging.info('STATUS %s', status)
+
+while status != 200:
+
+    try:
+        status = requests.head(url='http://eazymac25.pythonanywhere.com/').status_code
+    except Exception as e:
+        logging.error('error: %s', e)
+
+    logging.info('STATUS %s', status)
+    sleep(2)
+
+try:
+    OLD_LEVEL = requests.get(url=url).json().get('record', {}).get('moistureLevel', None)
+except Exception as e:
+    OLD_LEVEL = None
+    logging.debug('error checking last level %s', e)
+
 def post_moisture(moisture_level):
     response = None
 
-    try:
-        old_level = requests.get(url=url).json().get('record', {}).get('moistureLevel', None)
-    except Exception as e:
-        logging.debug('error checking last level %s', e)
-
-    if moisture_level != old_level and old_level is not None:
+    if moisture_level != OLD_LEVEL:
         current_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
 
         data = {
             "moistureLevel": moisture_level,
             "createTime": current_time
         }
+
         try:
             response = requests.post(
                 url=url,
@@ -52,6 +68,7 @@ def post_moisture(moisture_level):
             )
         except Exception as e:
             logging.debug('error posting data: %s', e)
+            
     return response
 
 def moisture_callback(channel):
