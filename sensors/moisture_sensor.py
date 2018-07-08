@@ -66,6 +66,7 @@ def post_moisture(moisture_level):
                 data=json.dumps(data),
                 headers=headers
             )
+            OLD_LEVEL = moisture_level
         except Exception as e:
             logging.debug('error posting data: %s', e)
             
