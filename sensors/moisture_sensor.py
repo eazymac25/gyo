@@ -50,6 +50,7 @@ except Exception as e:
     logging.debug('error checking last level %s', e)
 
 def post_moisture(moisture_level):
+    global OLD_LEVEL
     response = None
 
     if moisture_level != OLD_LEVEL:
@@ -75,10 +76,10 @@ def post_moisture(moisture_level):
 def moisture_callback(channel):
     if GPIO.input(channel):
         # when the moisture is high
-        post_moisture('HIGH')
+        post_moisture('LOW')
     else:
         # when the moisture is low
-        post_moisture('LOW')
+        post_moisture('HIGH')
     pass
 
 GPIO.setmode(GPIO.BCM)
