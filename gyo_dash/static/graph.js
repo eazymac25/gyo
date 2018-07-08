@@ -16,6 +16,14 @@
       "processData": false,
     }
 
+    function getMoistureLevel(){
+        settings.url = "http://eazymac25.pythonanywhere.com/rest/api/1/moisture";
+
+        $.ajax(settings).done(function (response){
+            $('#moistureLevel').text(response.record.moistureLevel);
+        });
+    }
+
     function getMeasurements(timeframe, period){
 
         settings.url = "http://eazymac25.pythonanywhere.com/rest/api/1/measureHistory?timeframe=" + timeframe +
