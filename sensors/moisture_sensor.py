@@ -84,7 +84,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(CHANNEL, GPIO.IN)
 
 
-GPIO.add_event_detect(CHANNEL, GPIO.BOTH, bouncetime=1000)
+GPIO.add_event_detect(CHANNEL, GPIO.BOTH, bouncetime=300)
 GPIO.add_event_callback(CHANNEL, moisture_callback)
 
 while True:

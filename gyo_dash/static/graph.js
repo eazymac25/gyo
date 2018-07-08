@@ -153,6 +153,7 @@
             getMeasurements(timeframe, period);
         });
 
+        getMoistureLevel();
         // load default
         getMeasurements("30", "M");
     });
