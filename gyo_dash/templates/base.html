@@ -2,7 +2,9 @@
 <!doctype html>
 <html>
   <head>
-    <title>GYO</title>
+    <title>GYO - Grow Your Own</title>
+
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/leaf.png') }}" />
 
     <script src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='node_modules/chart.js/dist/Chart.js') }}"></script>
@@ -17,15 +19,17 @@
 
   </head>
   <body>
-    <div class="container">
+    <div class="jumbotron text-center" style="margin-top: 0; background-color: #37af28; color: white;">
       <h1>GYO Dashboard</h1>
-      <br>
+      <p>A place to monitor the temperature and humidity of your apartment</p>
+    </div>
+    <div class="container">
       <div class="row">
-        <div class="col-sm-6">
-          <h3>A place to monitor the temperature and humidity of your apartment</h3>
+        <div class="col-sm-8">
+          <h4>Dashboard</h4>
         </div>
-        <div class="col-sm-6">
-          <h3>Moisture Level: </h3><h3 id="moistureLevel">HIGH</h3>
+        <div class="col-sm-4 text-right">
+          <h4>Moisture Level: <span id="moistureLevel"></span></h4>
         </div>
       </div>
       <br>
@@ -34,10 +38,10 @@
         <p>Time Period Selector</p>
       </div>
       <div class="btn-group row">
-        <button type="button" class="btn btn-primary">30 Mins</button>
-        <button type="button" class="btn btn-primary">1 Hr</button>
-        <button type="button" class="btn btn-primary">12 Hrs</button>
-        <button type="button" class="btn btn-primary">1 Day</button>
+        <button type="button" class="btn btn-success activate">30 Mins</button>
+        <button type="button" class="btn btn-success">1 Hr</button>
+        <button type="button" class="btn btn-success">12 Hrs</button>
+        <button type="button" class="btn btn-success">1 Day</button>
         <!-- <button type="button" class="btn btn-primary">1 Week</button> -->
       </div>
       <canvas id="humidityChart" width="400" height="300"></canvas>
