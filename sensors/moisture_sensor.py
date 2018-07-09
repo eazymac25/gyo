@@ -90,4 +90,4 @@ GPIO.add_event_detect(CHANNEL, GPIO.BOTH, bouncetime=300)
 GPIO.add_event_callback(CHANNEL, moisture_callback)
 
 while True:
-    sleep(1) # we want to keep this running to register callbacks
+    sleep(.1) # we want to keep this running to register callbacks
